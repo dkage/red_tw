@@ -1,4 +1,6 @@
 import praw
+import requests
+import json
 from api_key import id, secret
 
 # ID : kgl9LR-fg9np6g
@@ -9,11 +11,32 @@ reddit = praw.Reddit(client_id=id,
                      user_agent='reddit_to_twitter')
 
 
-# Gyf
-submission = reddit.submission(id='b8hrx1')
-# reddit
-submission = reddit.submission(id='b8ls3t')
+# gfycat.com
+submission = reddit.submission(id='b7j480')
+# redd.it
+# submission = reddit.submission(id='b8rkr1')
 # imgur
-submission = reddit.submission(id='b8cnob')
+# submission = reddit.submission(id='b8uf7e')
 
-print(submission.url)
+
+url = submission.url
+
+
+if 'gfycat.com' in url:
+    print('gfycat.com')
+    gfycat_json = 'https://api.gfycat.com/v1/gfycats/' + url.rsplit('/', 1)[1]
+    request = requests.get(gfycat_json).text
+    json_request = json.loads(request)
+    gif_5mb = json_request['gfyItem']['max5mbGif']
+
+
+
+elif 'redd.in' in url:
+    print('Link redd.it')
+    extension = url.rsplit('.', 1)[1]
+    print(extension)
+elif 'imgur.com' in url:
+    print('Link imgur.com')
+    extension = url.rsplit('.', 1)[1]
+    print(extension)
+
