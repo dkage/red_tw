@@ -1,4 +1,6 @@
 import praw
+import re
+import functions
 import requests
 import json
 from api_key import id, secret
@@ -11,14 +13,14 @@ reddit = praw.Reddit(client_id=id,
                      user_agent='reddit_to_twitter')
 
 
-# gfycat.com
-submission = reddit.submission(id='b7j480')
-# redd.it
-# submission = reddit.submission(id='b8rkr1')
-# imgur
-# submission = reddit.submission(id='b8uf7e')
+#imgur pic
+full_link = 'https://www.reddit.com/r/pics/comments/b9c569/such_a_beautiful_cat/'
+#imgur gif/mp4
+# full_link = 'https://www.reddit.com/r/holdmyfries/comments/avvow8/hmf_while_i_dance_with_my_t_rex_in_a_terrifying/'
+grab_id = re.search(r'(?<=comments/).\w*', full_link)
+topic_id = grab_id.group(0)
 
-
+submission = reddit.submission(id=topic_id)
 url = submission.url
 
 
@@ -28,15 +30,29 @@ if 'gfycat.com' in url:
     request = requests.get(gfycat_json).text
     json_request = json.loads(request)
     gif_5mb = json_request['gfyItem']['max5mbGif']
+    #TODO download gif_5mb
 
+elif 'redd.it' in url:
 
-
-elif 'redd.in' in url:
     print('Link redd.it')
     extension = url.rsplit('.', 1)[1]
-    print(extension)
+    if extension == 'jpg':
+        #TODO download jpg image
+        print('jpg')
+    else:
+        id = url.rsplit('/', 1)[1]
+        functions.save_vid(id)
+
 elif 'imgur.com' in url:
     print('Link imgur.com')
+
     extension = url.rsplit('.', 1)[1]
-    print(extension)
+    if extension == 'jpg':
+        functions.save_jpg(url)
+    else:
+        print(url)
+        # TODO download GIF as gif_tmp
+
+
+
 
