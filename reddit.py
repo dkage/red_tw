@@ -17,7 +17,7 @@ reddit = praw.Reddit(client_id=reddit_id,
 ## REDD.IT ##
 #############
 # REDD.IT # GIF/MP4
-# full_link = 'https://www.reddit.com/r/gifs/comments/b9etxb/ice_melting_off_a_handrail/'
+full_link = 'https://www.reddit.com/r/gifs/comments/b9etxb/ice_melting_off_a_handrail/'
 # REDD.IT # JPG
 # full_link = 'https://www.reddit.com/r/pics/comments/b9vhg9/long_exposure_of_a_shipwreck/'
 
@@ -26,7 +26,7 @@ reddit = praw.Reddit(client_id=reddit_id,
 ###########
 # IMGUR # GIFV # T-REX DANCING
 # full_link = 'https://www.reddit.com/r/holdmyfries/comments/avvow8/hmf_while_i_dance_with_my_t_rex_in_a_terrifying/'
-full_link = 'https://www.reddit.com/r/gifs/comments/b9s44l/screams_in_cat_what_are_those/'
+# full_link = 'https://www.reddit.com/r/gifs/comments/b9s44l/screams_in_cat_what_are_those/'
 # IMGUR # JPG
 # full_link = 'https://www.reddit.com/r/pics/comments/b9c569/such_a_beautiful_cat/'
 
@@ -42,23 +42,24 @@ topic_id = grab_id.group(0)
 submission = reddit.submission(id=topic_id)
 url = submission.url
 
-
+saved_file_type = ''
 if 'gfycat.com' in url:
     gfycat_json = 'https://api.gfycat.com/v1/gfycats/' + url.rsplit('/', 1)[1]
     request = requests.get(gfycat_json).text
     json_request = json.loads(request)
     gif_5mb = json_request['gfyItem']['max5mbGif']
     functions.save(gif_5mb, 'gif')
+    saved_file_type = 'gif'
 
 
 elif 'redd.it' in url:
     extension = url.rsplit('.', 1)[1]
     if extension == 'jpg':
         functions.save(url, 'jpg')
+        saved_file_type = 'jpg'
     else:
-        #TODO find a way to grab the DASH ID from HTML element
-        id = url.rsplit('/', 1)[1]
-        functions.save_vid(id)
+        functions.save_vid(url)
+        saved_file_type = 'mp4'
 
 
 elif 'imgur.com' in url:
@@ -66,9 +67,11 @@ elif 'imgur.com' in url:
     extension = url_breakdown[1]
     if extension == 'jpg':
         functions.save(url, 'jpg')
+        saved_file_type = 'jpg'
     elif extension == 'gifv' or extension == 'mp4':
         url = url_breakdown[0] + '.mp4'
         functions.save(url, 'mp4')
+        saved_file_type = 'mp4'
 
 
 # TODO find a way to check size of the new file

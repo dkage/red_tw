@@ -26,12 +26,12 @@ def save(url, extension):
     return True
 
 
-def save_vid(video_id=None):
+def save_vid(video_url):
     """This function is used to save specific cases where video/gif is hosted in redd.it"""
     name = 'video_tmp.mp4'
     full_file_path = dir + name
 
-    url_mp4 = 'https://v.redd.it/' + video_id + '/DASH_480'
+    url_mp4 = video_url + '/DASH_480'
 
     user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' \
                  'Chrome/70.0.3538.77 Safari/537.36'
