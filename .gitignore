@@ -1,7 +1,7 @@
-api_key
 venv
 .idea
 __pycache__
+api_key
 video_tmp.mp4
 tmp.gif
 tmp.jpg

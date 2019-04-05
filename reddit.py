@@ -3,20 +3,39 @@ import re
 import functions
 import requests
 import json
-from api_key import id, secret
+from api_key import reddit_id, reddit_secret
 
 # ID : kgl9LR-fg9np6g
 # secret: RCGhO6ruurRKslulwwY8yV5Xns8
 
-reddit = praw.Reddit(client_id=id,
-                     client_secret=secret,
+reddit = praw.Reddit(client_id=reddit_id,
+                     client_secret=reddit_secret,
                      user_agent='reddit_to_twitter')
 
 
-#imgur pic
-full_link = 'https://www.reddit.com/r/pics/comments/b9c569/such_a_beautiful_cat/'
-#imgur gif/mp4
+#############
+## REDD.IT ##
+#############
+# REDD.IT # GIF/MP4
+# full_link = 'https://www.reddit.com/r/gifs/comments/b9etxb/ice_melting_off_a_handrail/'
+# REDD.IT # JPG
+# full_link = 'https://www.reddit.com/r/pics/comments/b9vhg9/long_exposure_of_a_shipwreck/'
+
+###########
+## IMGUR ##
+###########
+# IMGUR # GIFV # T-REX DANCING
 # full_link = 'https://www.reddit.com/r/holdmyfries/comments/avvow8/hmf_while_i_dance_with_my_t_rex_in_a_terrifying/'
+full_link = 'https://www.reddit.com/r/gifs/comments/b9s44l/screams_in_cat_what_are_those/'
+# IMGUR # JPG
+# full_link = 'https://www.reddit.com/r/pics/comments/b9c569/such_a_beautiful_cat/'
+
+############
+## GFYCAT ##
+############
+# GFYCAT # GIF
+# full_link = 'https://www.reddit.com/r/gifs/comments/b9qg8e/8_year_old_doing_a_double_backflip/'
+
 grab_id = re.search(r'(?<=comments/).\w*', full_link)
 topic_id = grab_id.group(0)
 
@@ -25,34 +44,33 @@ url = submission.url
 
 
 if 'gfycat.com' in url:
-    print('gfycat.com')
     gfycat_json = 'https://api.gfycat.com/v1/gfycats/' + url.rsplit('/', 1)[1]
     request = requests.get(gfycat_json).text
     json_request = json.loads(request)
     gif_5mb = json_request['gfyItem']['max5mbGif']
-    #TODO download gif_5mb
+    functions.save(gif_5mb, 'gif')
+
 
 elif 'redd.it' in url:
-
-    print('Link redd.it')
     extension = url.rsplit('.', 1)[1]
     if extension == 'jpg':
-        #TODO download jpg image
-        print('jpg')
+        functions.save(url, 'jpg')
     else:
+        #TODO find a way to grab the DASH ID from HTML element
         id = url.rsplit('/', 1)[1]
         functions.save_vid(id)
 
+
 elif 'imgur.com' in url:
-    print('Link imgur.com')
-
-    extension = url.rsplit('.', 1)[1]
+    url_breakdown = url.rsplit('.', 1)
+    extension = url_breakdown[1]
     if extension == 'jpg':
-        functions.save_jpg(url)
-    else:
-        print(url)
-        # TODO download GIF as gif_tmp
+        functions.save(url, 'jpg')
+    elif extension == 'gifv' or extension == 'mp4':
+        url = url_breakdown[0] + '.mp4'
+        functions.save(url, 'mp4')
 
 
-
-
+# TODO find a way to check size of the new file
+# Max gif   - 15mb
+# Max image -  5mb
