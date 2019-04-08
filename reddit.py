@@ -3,6 +3,7 @@ import re
 import functions
 import requests
 import json
+import os
 from api_key import reddit_id, reddit_secret
 
 # ID : kgl9LR-fg9np6g
@@ -77,3 +78,13 @@ elif 'imgur.com' in url:
 # TODO find a way to check size of the new file
 # Max gif   - 15mb
 # Max image -  5mb
+
+filename = './tmp/tmp.' + saved_file_type
+file_size = os.stat(filename).st_size
+
+
+if saved_file_type == 'gif' and file_size < 15000000:
+    print('gif accepted size')
+if saved_file_type == 'jpg' and file_size < 5000000:
+    print('jpg accepted size')
+
