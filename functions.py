@@ -28,21 +28,45 @@ def save(url, extension):
 
 
 def save_vid(video_url):
-    """This function is used to save specific cases where video/gif is hosted in redd.it"""
-    name = 'tmp.mp4'
+    """
+    This function is used to save specific cases where video/gif is hosted in redd.it.
+    The redd.it website loads two separated files, one for video and another for audio, this function downloads both of
+    them and merges into a single video file with sound
+    """
+
+    name = 'tmp_video.mp4'
+    name_audio = 'tmp_audio.mp4'
     full_file_path = directory + name
+    full_file_path_audio = directory + name_audio
 
+    # Downloads MP4 in 480p resolution (gives the best file size to be uploaded later)
     url_mp4 = video_url + '/DASH_480'
+    url_audio = video_url + '/audio'
 
+    # User agent to be used during HTTP request
     user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' \
                  'Chrome/70.0.3538.77 Safari/537.36'
-    response = requests.get(url_mp4, headers={'User-Agent': user_agent})
 
+    # Download video file
+    response = requests.get(url_mp4, headers={'User-Agent': user_agent})
     with open(full_file_path, 'wb') as f:
         print("Downloading chunck")
         for chunk in response.iter_content(chunk_size=255):
             if chunk:
                 f.write(chunk)
+
+    # Download audio file
+    response = requests.get(url_audio, headers={'User-Agent': user_agent})
+    with open(full_file_path_audio, 'wb') as f:
+        print("Downloading chunck")
+        for chunk in response.iter_content(chunk_size=255):
+            if chunk:
+                f.write(chunk)
+
+    # Loads video file as object using MOVIEPY into mp4_video variable and saves output as 'tmp.mp4'
+    mp4_video = (VideoFileClip('./tmp/tmp_video.mp4'))
+    mp4_video.write_videofile('./tmp/tmp.mp4', audio='./tmp/tmp_audio.mp4')
+
     return True
 
 
