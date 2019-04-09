@@ -1,8 +1,11 @@
+# Dir IDE
+.idea
+# Dir Others
 __pycache__
 venv
-.idea
+# Tmp (automatically created)
+tmp
+# File with API and ACCESS keys
 api_key.py
-api_imgur.py
-video_tmp.mp4
-tmp.gif
-tmp.jpg
+tests.py
+.DS_Store

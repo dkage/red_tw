@@ -50,7 +50,7 @@ def save_vid(video_url):
     # Download video file
     response = requests.get(url_mp4, headers={'User-Agent': user_agent})
     with open(full_file_path, 'wb') as f:
-        print("Downloading chunck")
+        print("Downloading video")
         for chunk in response.iter_content(chunk_size=255):
             if chunk:
                 f.write(chunk)
@@ -58,7 +58,7 @@ def save_vid(video_url):
     # Download audio file
     response = requests.get(url_audio, headers={'User-Agent': user_agent})
     with open(full_file_path_audio, 'wb') as f:
-        print("Downloading chunck")
+        print("Downloading audio")
         for chunk in response.iter_content(chunk_size=255):
             if chunk:
                 f.write(chunk)

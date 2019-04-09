@@ -18,11 +18,11 @@ reddit = praw.Reddit(client_id=reddit_id,
 ## REDD.IT ##
 #############
 # REDD.IT # GIF/MP4
-full_link = 'https://www.reddit.com/r/gifs/comments/b9etxb/ice_melting_off_a_handrail/'
+# full_link = 'https://www.reddit.com/r/gifs/comments/b9etxb/ice_melting_off_a_handrail/'
 # Redd.it # Mp4 sound
-full_link = 'https://www.reddit.com/r/holdmybeer/comments/ban2nj/let_me_just_do_a_quick_backflip_off_this_table/'
+# full_link = 'https://www.reddit.com/r/holdmybeer/comments/ban2nj/let_me_just_do_a_quick_backflip_off_this_table/'
 # REDD.IT # JPG
-# full_link = 'https://www.reddit.com/r/pics/comments/b9vhg9/long_exposure_of_a_shipwreck/'
+full_link = 'https://www.reddit.com/r/pics/comments/b9vhg9/long_exposure_of_a_shipwreck/'
 
 ###########
 ## IMGUR ##
