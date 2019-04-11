@@ -3,7 +3,7 @@ import re
 import functions
 import requests
 import json
-from api_key import reddit_id, reddit_secret
+from api_keys import reddit_id, reddit_secret
 
 
 def download_reddit_submission(full_link):

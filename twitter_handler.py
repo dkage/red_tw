@@ -1,13 +1,13 @@
 import os
 import sys
 from TwitterAPI import TwitterAPI
-from api_key import twitter_id, twitter_secret, twitter_access_token, twitter_access_secret
+from api_keys import twitter_id, twitter_secret, twitter_access_token, twitter_access_secret
 
 
 def tweet_video(tweet_text):
+    """This function tweets video files (mp4 format)"""
 
     video_filename = './tmp/tmp.mp4'
-    video_filename = './tmp/tmp.gif'
 
     def check_status(r):
         # EXIT PROGRAM WITH ERROR MESSAGE
@@ -52,6 +52,7 @@ def tweet_video(tweet_text):
 
 
 def tweeet_image(tweet_text, file_type):
+    """This function tweets image files (gifs and jpgs formats)"""
 
     image_path = './tmp/tmp.' + file_type
 

@@ -6,6 +6,6 @@ venv
 # Tmp (automatically created)
 tmp
 # File with API and ACCESS keys
-api_key.py
+api_keys.py
 tests.py
 .DS_Store

@@ -35,8 +35,9 @@ def save_vid(video_url):
 
     name = 'tmp_video.mp4'
     name_audio = 'tmp_audio.mp4'
-    full_file_path = directory + name
-    full_file_path_audio = directory + name_audio
+    video_file_path = directory + name
+    audio_file_path = directory + name_audio
+    output_file_path = directory + 'tmp.mp4'
 
     # Downloads MP4 in 480p resolution (gives the best file size to be uploaded later)
     url_mp4 = video_url + '/DASH_480'
@@ -48,7 +49,7 @@ def save_vid(video_url):
 
     # Download video file
     response = requests.get(url_mp4, headers={'User-Agent': user_agent})
-    with open(full_file_path, 'wb') as f:
+    with open(video_file_path, 'wb') as f:
         print("Downloading video")
         for chunk in response.iter_content(chunk_size=255):
             if chunk:
@@ -56,15 +57,20 @@ def save_vid(video_url):
 
     # Download audio file
     response = requests.get(url_audio, headers={'User-Agent': user_agent})
-    with open(full_file_path_audio, 'wb') as f:
+    with open(audio_file_path, 'wb') as f:
         print("Downloading audio")
         for chunk in response.iter_content(chunk_size=255):
             if chunk:
                 f.write(chunk)
 
-    # Loads video file as object using MOVIEPY into mp4_video variable and saves output as 'tmp.mp4'
-    mp4_video = (VideoFileClip('./tmp/tmp_video.mp4'))
-    mp4_video.write_videofile('./tmp/tmp.mp4', audio='./tmp/tmp_audio.mp4')
+    audio_file_size = os.stat(audio_file_path).st_size
+
+    mp4_video = (VideoFileClip(video_file_path))
+    if audio_file_size > 243:
+        # Loads video file as object using MOVIEPY into mp4_video variable and saves output as 'tmp.mp4'
+        mp4_video.write_videofile(output_file_path, audio=audio_file_path)
+    else:
+        mp4_video.write_videofile(output_file_path)
 
     return True
 
