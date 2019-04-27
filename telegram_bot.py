@@ -35,7 +35,9 @@ class Telegram:
         # print(update_url)  # Keep for debugging
         # print(json_response)  # Keep for debugging
         # Grabs last offset update_id, and adds one so updates already received and not returned anymore
-        self.offset = int(json_response['result'][-1]['update_id']) + 1
+        # if json_response['result'][-1]['update_id']:
+        if json_response['result']:
+            self.offset = int(json_response['result'][-1]['update_id']) + 1
         if json_response['ok']:
             return json_response['result']
         else:
@@ -55,7 +57,9 @@ class Telegram:
 
     def send_message(self, text_to_send, receiver_id):
         http_response = requests.get(self.url + "sendMessage?text={}&chat_id={}".format(text_to_send, receiver_id))
-        print(http_response)
-        print(type(http_response))
-        return True
+        if http_response.status_code == 200:
+            return True
+        else:
+            return False
+
 

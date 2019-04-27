@@ -1,10 +1,13 @@
 import os
 import sys
 from TwitterAPI import TwitterAPI
+# Prod Keys
 from api_keys import twitter_id, twitter_secret, twitter_access_token, twitter_access_secret
+# Dev Keys
+from api_keys import twitter_id_dev, twitter_secret_dev, twitter_access_token_dev, twitter_access_secret_dev
 
 
-def tweet_video(tweet_text):
+def tweet_video(tweet_text, env):
     """This function tweets video files (mp4 format)"""
 
     video_filename = './tmp/tmp.mp4'
@@ -16,10 +19,17 @@ def tweet_video(tweet_text):
             print(r.text)
             sys.exit(0)
 
-    api = TwitterAPI(twitter_id,
-                     twitter_secret,
-                     twitter_access_token,
-                     twitter_access_secret)
+    if env == 'DEV':
+        api = TwitterAPI(twitter_id_dev,
+                         twitter_secret_dev,
+                         twitter_access_token_dev,
+                         twitter_access_secret_dev)
+    elif env == 'PROD':
+        api = TwitterAPI(twitter_id,
+                         twitter_secret,
+                         twitter_access_token,
+                         twitter_access_secret)
+
 
     bytes_sent = 0
     total_bytes = os.path.getsize(video_filename)
@@ -51,15 +61,23 @@ def tweet_video(tweet_text):
     check_status(upload_return)
 
 
-def tweeet_image(tweet_text, file_type):
+def tweeet_image(tweet_text, file_type, env):
     """This function tweets image files (gifs and jpgs formats)"""
 
     image_path = './tmp/tmp.' + file_type
-
-    api = TwitterAPI(twitter_id,
-                     twitter_secret,
-                     twitter_access_token,
-                     twitter_access_secret)
+    print('out')
+    print(env)
+    if env == 'DEV':
+        api = TwitterAPI(twitter_id_dev,
+                         twitter_secret_dev,
+                         twitter_access_token_dev,
+                         twitter_access_secret_dev)
+        print('in')
+    elif env == 'PROD':
+        api = TwitterAPI(twitter_id,
+                         twitter_secret,
+                         twitter_access_token,
+                         twitter_access_secret)
 
     # STEP 1 - upload image
     file = open(image_path, 'rb')
