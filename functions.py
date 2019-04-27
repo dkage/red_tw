@@ -55,6 +55,16 @@ def save_vid(video_url):
             if chunk:
                 f.write(chunk)
 
+    video_file_size = os.stat(video_file_path).st_size
+    if video_file_size < 250:
+        url_mp4 = video_url + '/DASH_360'
+        response = requests.get(url_mp4, headers={'User-Agent': user_agent})
+        with open(video_file_path, 'wb') as f:
+            print("Downloading video")
+            for chunk in response.iter_content(chunk_size=255):
+                if chunk:
+                    f.write(chunk)
+
     # Download audio file
     response = requests.get(url_audio, headers={'User-Agent': user_agent})
     with open(audio_file_path, 'wb') as f:
