@@ -1,6 +1,5 @@
 import reddit_handler
 import twitter_handler
-import datetime
 from time import sleep
 from telegram_bot import Telegram
 
@@ -21,7 +20,7 @@ def main():
             # print(update_chat_id)
             # print(update_from_user)
             # bot.send_message(update_text, update_chat_id)
-            if 'cancel' in update:
+            if 'CANCEL' in update_text:
                 bot.send_message('Action Reddit to Twitter process cancelled by user.', update_chat_id)
                 link_received = 0
                 reddit_link = ''
@@ -46,7 +45,7 @@ def main():
         sleep(1)
 
 
-def action (full_link, tweet_msg, env):
+def action(full_link, tweet_msg, env):
     # tweet_msg = 'Test ' + str(datetime.datetime.now())
     saved_file_type = reddit_handler.download_reddit_submission(full_link)
 
@@ -62,6 +61,3 @@ if __name__ == '__main__':
     bot = Telegram()
     bot.get_me()
     main()
-
-
-
