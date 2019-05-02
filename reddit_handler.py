@@ -11,7 +11,10 @@ def download_reddit_submission(full_link):
                          client_secret=reddit_secret,
                          user_agent='reddit_to_twitter')
 
+
+
     grab_id = re.search(r'(?<=comments/).\w*', full_link)
+    print(grab_id)
     topic_id = grab_id.group(0)
 
     submission = reddit.submission(id=topic_id)

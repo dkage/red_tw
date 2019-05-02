@@ -20,18 +20,20 @@ def main():
             # print(update_chat_id)
             # print(update_from_user)
             # bot.send_message(update_text, update_chat_id)
+            print(update_text)
+
             if 'CANCEL' in update_text:
                 bot.send_message('Action Reddit to Twitter process cancelled by user.', update_chat_id)
                 link_received = 0
                 reddit_link = ''
             elif reddit_link and ready_to_tweet:
-                action(reddit_link, update, env)
+                bot.send_message(action(reddit_link, update_text, env), update_chat_id)
             elif 'reddit.com' in update_text and link_received == 0:
                 bot.send_message('Reddit link received. Please choose account to make upload, type DEV for test account'
                                  ' or type PROD for main account.', update_chat_id)
                 link_received = 1
                 reddit_link = update_text
-            elif 'DEV' in update_text and link_received == 1:
+            elif ('DEV' in update_text or 'dev' in update_text) and link_received == 1:
                 bot.send_message('Type the message to be tweeted alongside the media from Reddit', update_chat_id)
                 ready_to_tweet = 1
                 env = 'DEV'
@@ -51,9 +53,9 @@ def action(full_link, tweet_msg, env):
 
     print('saved_file_type = ' + saved_file_type)
     if saved_file_type == 'gif' or saved_file_type == 'jpg':
-        twitter_handler.tweeet_image(tweet_msg, saved_file_type, env)
+        return twitter_handler.tweeet_image(tweet_msg, saved_file_type, env)
     elif saved_file_type == 'mp4':
-        twitter_handler.tweet_video(tweet_msg, env)
+        return twitter_handler.tweet_video(tweet_msg, env)
 
 
 # Python main or modular check

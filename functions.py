@@ -14,6 +14,7 @@ def save(url, extension):
     name = 'tmp.' + extension
     full_file_path = directory + name
 
+    # TODO make a CHECK case for video length ( MAX TWITTER API SIZE IS 30 SECONDS)
     try:
         image_request = requests.get(url, headers={'User-Agent': user_agent1})
         if image_request.status_code == 200:

@@ -46,7 +46,7 @@ class Telegram:
     @staticmethod
     def get_update_data(json_update):
 
-        update_text = json_update['text'].upper()
+        update_text = json_update['text']
         update_chat_id = json_update['from']['id']
         update_from_user = json_update['from']['username']
 
