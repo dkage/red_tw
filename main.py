@@ -15,34 +15,36 @@ def main():
         last_updates = bot.get_updates()
 
         for update in last_updates:
-            update_text, update_chat_id, update_from_user = bot.get_update_data(update['message'])
-            # print(update_text)
-            # print(update_chat_id)
-            # print(update_from_user)
-            # bot.send_message(update_text, update_chat_id)
-            print(update_text)
+            update_data = bot.get_update_data(update['message'])
 
-            if 'CANCEL' in update_text:
-                bot.send_message('Action Reddit to Twitter process cancelled by user.', update_chat_id)
+            # Debugs
+            # print(update_data['id'])
+            # print(update_data['user'])
+            # bot.send_message(update_data['text'], update_data['id)
+
+            if 'CANCEL' in update_data['text']:
+                bot.send_message('Action Reddit to Twitter process cancelled by user.', update_data['id'], update_data['user'])
                 link_received = 0
                 reddit_link = ''
             elif reddit_link and ready_to_tweet:
-                bot.send_message(action(reddit_link, update_text, env), update_chat_id)
-            elif 'reddit.com' in update_text and link_received == 0:
+                bot.send_message(action(reddit_link, update_data['text'], env), update_data['id'], update_data['user'])
+                link_received = 0
+                reddit_link = ''
+            elif 'reddit.com' in update_data['text'] and link_received == 0:
                 bot.send_message('Reddit link received. Please choose account to make upload, type DEV for test account'
-                                 ' or type PROD for main account.', update_chat_id)
+                                 ' or type PROD for main account.', update_data['id'])
                 link_received = 1
-                reddit_link = update_text
-            elif ('DEV' in update_text or 'dev' in update_text) and link_received == 1:
-                bot.send_message('Type the message to be tweeted alongside the media from Reddit', update_chat_id)
+                reddit_link = update_data['text']
+            elif ('DEV' in update_data['text'] or 'dev' in update_data['text']) and link_received == 1:
+                bot.send_message('Type the message to be tweeted alongside the media from Reddit', update_data['id'], update_data['user'])
                 ready_to_tweet = 1
                 env = 'DEV'
-            elif 'PROD' in update_text and link_received == 1:
-                bot.send_message('Type the message to be tweeted alongside the media from Reddit', update_chat_id)
+            elif 'PROD' in update_data['text'] and link_received == 1:
+                bot.send_message('Type the message to be tweeted alongside the media from Reddit', update_data['id'], update_data['user'])
                 ready_to_tweet = 1
                 env = 'PROD'
             else:
-                bot.send_message('Invalid command', update_chat_id)
+                bot.send_message('Invalid command', update_data['id'], update_data['user'])
 
         sleep(1)
 

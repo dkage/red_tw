@@ -46,20 +46,26 @@ class Telegram:
     @staticmethod
     def get_update_data(json_update):
 
-        update_text = json_update['text']
-        update_chat_id = json_update['from']['id']
-        update_from_user = json_update['from']['username']
+        update_data = dict()
+        update_data['text'] = json_update['text']
+        update_data['id'] = json_update['from']['id']
+        update_data['user'] = json_update['from']['username']
 
-        if not update_text or not update_chat_id:
+        print("\n"
+              "Parsing new message from user {}, chat_id = {}\n"
+              "Message > {}\n".format(update_data['user'], update_data['id'], update_data['text']))
+
+        if not update_data['text'] or not update_data['id']:
             return False
         else:
-            return update_text, update_chat_id, update_from_user
+            return update_data
 
-    def send_message(self, text_to_send, receiver_id):
+    def send_message(self, text_to_send, receiver_id, receiver_user):
         http_response = requests.get(self.url + "sendMessage?text={}&chat_id={}".format(text_to_send, receiver_id))
         if http_response.status_code == 200:
+            print('\nMessage successfully sent to user {}, chat_id = {},\n'
+                  'Message > {}\n'.format(receiver_user, receiver_id, text_to_send))
             return True
         else:
+            print('Error delivering message, HTTP response {}'.format(http_response.status_code))
             return False
-
-
