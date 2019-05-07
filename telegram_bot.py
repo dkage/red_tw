@@ -51,6 +51,7 @@ class Telegram:
         update_data['id'] = json_update['from']['id']
         update_data['user'] = json_update['from']['username']
 
+        # Prints to terminal message sent
         print("\n"
               "Parsing new message from user {}, chat_id = {}\n"
               "Message > {}\n".format(update_data['user'], update_data['id'], update_data['text']))

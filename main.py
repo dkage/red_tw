@@ -23,28 +23,43 @@ def main():
             # bot.send_message(update_data['text'], update_data['id)
 
             if 'CANCEL' in update_data['text']:
-                bot.send_message('Action Reddit to Twitter process cancelled by user.', update_data['id'], update_data['user'])
+                bot.send_message('Action Reddit to Twitter process cancelled by user.',
+                                 update_data['id'],
+                                 update_data['user'])
                 link_received = 0
                 reddit_link = ''
+
             elif reddit_link and ready_to_tweet:
-                bot.send_message(action(reddit_link, update_data['text'], env), update_data['id'], update_data['user'])
+                bot.send_message(action(reddit_link, update_data['text'], env),
+                                 update_data['id'],
+                                 update_data['user'])
                 link_received = 0
                 reddit_link = ''
+
             elif 'reddit.com' in update_data['text'] and link_received == 0:
                 bot.send_message('Reddit link received. Please choose account to make upload, type DEV for test account'
                                  ' or type PROD for main account.', update_data['id'])
                 link_received = 1
                 reddit_link = update_data['text']
+
             elif ('DEV' in update_data['text'] or 'dev' in update_data['text']) and link_received == 1:
-                bot.send_message('Type the message to be tweeted alongside the media from Reddit', update_data['id'], update_data['user'])
+                bot.send_message('Type the message to be tweeted alongside the media from Reddit',
+                                 update_data['id'],
+                                 update_data['user'])
                 ready_to_tweet = 1
                 env = 'DEV'
+
             elif 'PROD' in update_data['text'] and link_received == 1:
-                bot.send_message('Type the message to be tweeted alongside the media from Reddit', update_data['id'], update_data['user'])
+                bot.send_message('Type the message to be tweeted alongside the media from Reddit',
+                                 update_data['id'],
+                                 update_data['user'])
                 ready_to_tweet = 1
                 env = 'PROD'
+
             else:
-                bot.send_message('Invalid command', update_data['id'], update_data['user'])
+                bot.send_message('Invalid command',
+                                 update_data['id'],
+                                 update_data['user'])
 
         sleep(1)
 
