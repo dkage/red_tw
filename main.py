@@ -12,9 +12,9 @@ def text_messages(option, env=''):
         return 'Reddit link received. Please choose account to make upload, type "DEV" for test account or "PROD" for '\
                'main account.'
     elif option == 3:
-        return 'Type the message to be tweeted alongside the media from Reddit\n' \
-                                     'the message will be sent using Twitter profile set as {} environment' \
-                                     ''.format(env)
+        return 'Type tweet text message. The next message sent will be tweeted alongside the media from the given ' \
+               'link.\n' \
+               'The typed message will be sent using Twitter profile set as {} environment'.format(env)
     return 'INVALID OPTION'
 
 

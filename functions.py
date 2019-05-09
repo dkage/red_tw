@@ -9,7 +9,7 @@ if not os.path.exists(directory):
     os.makedirs(directory)
 
 
-def save(url, extension):
+def download(url, extension):
     """This function receives an URL ending with a file extension and saves that file (gif, jpg)"""
     name = 'tmp.' + extension
     full_file_path = directory + name
@@ -27,13 +27,14 @@ def save(url, extension):
     return True
 
 
-def save_vid(video_url):
+def download_video(video_url):
     """
     This function is used to save specific cases where video/gif is hosted in redd.it.
     The redd.it website loads two separated files, one for video and another for audio, this function downloads both of
     them and merges into a single video file with sound
     """
-
+    # TODO FIND A WAY TO DISCOVER VIDEO LENGTH (MAX ALLOWED FOR TWITTER API UPLOAD IS 30 SECONDS)
+    # TODO maybe create a new chat iteration if video length is too big, to ask for times to download video interval
     name = 'tmp_video.mp4'
     name_audio = 'tmp_audio.mp4'
     video_file_path = directory + name
@@ -100,6 +101,20 @@ def convert_mp4_to_gif(video_file='./tmp/tmp.mp4'):
 
 def check_size():
     # TODO create function to check gif and jpg size before sending to Twitter
+
+    # Max gif   - 15mb
+    # Max image -  5mb
+
+    # filename = './tmp/tmp.' + saved_file_type
+    # file_size = os.stat(filename).st_size
+    #
+    #
+    # if saved_file_type == 'gif' and file_size < 15000000:
+    #     print('gif accepted size')
+    # if saved_file_type == 'jpg' and file_size < 5000000:
+    #     print('jpg accepted size')
+    #
+
     return True
 
 
