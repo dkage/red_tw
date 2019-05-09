@@ -3,7 +3,7 @@
 # Dir Others
 __pycache__
 venv
-# Tmp (automatically created)
+# Tmp (automatically created on download action)
 tmp
 # File with API and ACCESS keys
 api_keys.py

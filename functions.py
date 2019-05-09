@@ -14,6 +14,8 @@ def download(url, extension):
     name = 'tmp.' + extension
     full_file_path = directory + name
 
+    print('\nDownloading {} file type, from url: {} \n'.format(extension, url))
+
     # TODO make a CHECK case for video length ( MAX TWITTER API SIZE IS 30 SECONDS)
     try:
         image_request = requests.get(url, headers={'User-Agent': user_agent1})
@@ -116,6 +118,3 @@ def check_size():
     #
 
     return True
-
-
-
