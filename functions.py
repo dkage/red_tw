@@ -22,6 +22,7 @@ def download(url, extension):
         if image_request.status_code == 200:
             with open(full_file_path, 'wb') as file:
                 file.write(image_request.content)
+        # TODO check if download was successful
         print('File downloaded successfully')
     except Exception as error:
         print('Error accessing URL:\n' + str(error))
