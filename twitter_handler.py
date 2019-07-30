@@ -50,6 +50,9 @@ def tweet_video(tweet_text, env):
     total_bytes = os.path.getsize(video_filename)
     file = open(video_filename, 'rb')
 
+    # Connection timeout increased to reduce errors happening because of slow connection do API
+    api.CONNECTION_TIMEOUT = 20
+
     upload_return = api.request('media/upload',
                                 {'command': 'INIT', 'media_type': 'video/mp4', 'total_bytes': total_bytes})
     check_status(upload_return)
