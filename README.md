@@ -1,9 +1,8 @@
 # Reddit to Twitter
 
-This project was created to make easier to upload video files from reddit directly to Twitter.
+This project was created to make easier to upload video files from Reddit directly to a Twitter account.
 
-As Reddit files comes from different services and formats, and for each type of file from each host I needed a different
-website or service/application to download, I decided to create a code to make that easier.
+As Reddit posts with media files comes from different services and formats, and for each type of file from each host I needed a different  pwebsite or service/application to download, I decided to create a code to make that easier.
 
 Still working in a lot of exception handling, but it works fine already most of the time.
 
