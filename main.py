@@ -5,7 +5,7 @@ from telegram_bot import Telegram
 
 
 def text_messages(option, env=''):
-    """ This function returns the corresponding message to be sent for user through Telegram bot. """
+    """ This function returns the corresponding answer messages to be sent for user through Telegram bot. """
     if option == 1:
         return 'Action Reddit to Twitter process cancelled by user.'
     elif option == 2:
@@ -66,7 +66,6 @@ def main():
 
 
 def action(full_link, tweet_msg, env):
-    # tweet_msg = 'Test ' + str(datetime.datetime.now())
     saved_file_type = reddit_handler.download_reddit_submission(full_link)
 
     print('saved_file_type = ' + saved_file_type)
