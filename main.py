@@ -35,7 +35,6 @@ def main():
             # Debugs
             # print(update_data['id'])
             # print(update_data['user'])
-            # bot.send_message(update_data['text'], update_data['id)
 
             if 'CANCEL' in update_data['text']:
                 message_to_be_sent = text_messages(1)
@@ -45,6 +44,7 @@ def main():
             elif reddit_link and ready_to_tweet:
                 message_to_be_sent = action(reddit_link, update_data['text'], env)
                 link_received = 0
+                ready_to_tweet = 0
                 reddit_link = ''
 
             elif 'reddit.com' in update_data['text'] and link_received == 0:
