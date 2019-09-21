@@ -5,6 +5,7 @@ from TwitterAPI import TwitterAPI
 from api_keys import twitter_id, twitter_secret, twitter_access_token, twitter_access_secret
 # Dev Keys
 from api_keys import twitter_id_dev, twitter_secret_dev, twitter_access_token_dev, twitter_access_secret_dev
+from moviepy.editor import VideoFileClip
 
 
 def api_setup(env_variable):
@@ -33,6 +34,9 @@ def tweet_video(tweet_text, env):
     """This function tweets video files (mp4 format)"""
 
     video_filename = './tmp/tmp.mp4'
+
+    clip_to_upload = VideoFileClip(video_filename)
+    print(clip_to_upload.duration)
 
     def check_status(r):
         # EXIT PROGRAM WITH ERROR MESSAGE

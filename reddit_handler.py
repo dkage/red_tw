@@ -44,6 +44,8 @@ def download_reddit_submission(full_link):
             saved_file_type = 'jpg'
         else:
             functions.download_video(url)
+            # returns = functions.download_video(url)
+            # if not returns:
             saved_file_type = 'mp4'
 
     elif 'imgur.com' in url:

@@ -3,7 +3,7 @@
 This project was created to make easier to upload video files from Reddit directly to a Twitter account.
 
 As Reddit posts with media (mp4, gif, jpg) are normally posted from different hosting services, and as each service uses different
-filetypes, as often I want to post something I see interesting on Reddit to my Twitter account, I needed to handle many filetypes,
+file types, as often I want to post something I see interesting on Reddit to my Twitter account, I needed to handle many filetypes,
 use online converter tools to get the right format/size for Twitter to upload, and only then share the media with my followers. 
 
 To make this process a lot less painful I developed this little program that works as middle-man converter between Reddit and Twitter.

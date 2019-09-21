@@ -16,7 +16,6 @@ def download(url, extension):
 
     print('\nDownloading {} file type, from url: {} \n'.format(extension, url))
 
-    # TODO make a CHECK case for video length ( MAX TWITTER API SIZE IS 30 SECONDS)
     try:
         image_request = requests.get(url, headers={'User-Agent': user_agent1})
         if image_request.status_code == 200:
@@ -36,7 +35,6 @@ def download_video(video_url):
     The redd.it website loads two separated files, one for video and another for audio, this function downloads both of
     them and merges into a single video file with sound
     """
-    # TODO FIND A WAY TO DISCOVER VIDEO LENGTH (MAX ALLOWED FOR TWITTER API UPLOAD IS 30 SECONDS)
     # TODO maybe create a new chat iteration if video length is too big, to ask for times to download video interval
     name = 'tmp_video.mp4'
     name_audio = 'tmp_audio.mp4'
@@ -87,6 +85,13 @@ def download_video(video_url):
     else:
         mp4_video.write_videofile(output_file_path)
 
+    if mp4_video.duration > 30.00:
+        # TODO needs to send message to user and return false to functions
+        # TODO maybe create a new chat iteration if video length is too big, to ask for times to download video
+        #  probably new function to be called
+
+        print('Mp4 longer than 30 seconds limit')
+        return False
     return True
 
 
@@ -119,3 +124,5 @@ def check_size():
     #
 
     return True
+
+
