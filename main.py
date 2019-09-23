@@ -37,6 +37,7 @@ def main():
             # print(update_data['id'])
             # print(update_data['user'])
 
+            # TODO make a new check because if there is in the URL the 'CANCEL' word this would trigger this IF
             if 'CANCEL' in update_data['text']:
                 message_to_be_sent = text_messages(1)
                 link_received = 0
