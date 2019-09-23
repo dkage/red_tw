@@ -28,6 +28,7 @@ def main():
     message_to_be_sent = ''
 
     while True:
+        # TODO make a check if connection is down. Try-exception here.
         last_updates = bot.get_updates()
 
         for update in last_updates:
@@ -55,7 +56,7 @@ def main():
                 link_received = 1
                 reddit_link = update_data['text']
 
-            # grabs message text to be sent on tweet
+            # grabs message text to be sent on tweet alongside media content
             elif ('DEV' in update_data['text'] or 'dev' in update_data['text']) or \
                     ('PROD' in update_data['text'] or 'prod' in update_data['text']) and link_received == 1:
                 message_to_be_sent = text_messages(3, update_data['text'])
@@ -70,6 +71,7 @@ def main():
 
 
 def action(full_link, tweet_msg, env):
+    # Message to deliver to Telegram chat from return of the tweet functions
     tweet_return = ''
     saved_file_type = reddit_handler.download_reddit_submission(full_link)
 
