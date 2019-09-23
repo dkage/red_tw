@@ -113,7 +113,7 @@ def tweeet_image(tweet_text, file_type, env):
         media_id = api_response.json()['media_id']
         api_response = api.request('statuses/update', {'status': tweet_text, 'media_ids': media_id})
 
-        return 'Media uploaded successfully, tweet sent to API. API return ' + api_response
+        return 'Media uploaded successfully, tweet sent to API.$0D API return ' + api_response
     else:
         print('UPDATE STATUS FAILED. API response error ' + api_response)
         return 'Error during media upload: ' + api_response.text
