@@ -9,7 +9,7 @@ def text_messages(option, env=''):
     if option == 1:
         return 'Action Reddit to Twitter process cancelled by user.'
     elif option == 2:
-        return 'Reddit link received. Please choose account to make upload, type "DEV" for test account or "PROD" for '\
+        return 'Reddit link received. Please choose account to make upload, type "DEV" for test account or "PROD" for ' \
                'main account.'
     elif option == 3:
         return 'Type tweet text message. The next message sent will be tweeted alongside the media from the given ' \
@@ -25,6 +25,7 @@ def main():
     ready_to_tweet = 0
     reddit_link = ''
     env = ''
+    message_to_be_sent = ''
 
     while True:
         last_updates = bot.get_updates()
@@ -42,7 +43,10 @@ def main():
                 reddit_link = ''
 
             elif reddit_link and ready_to_tweet:
+                print('Reddit link received and account to tweet selected. Making the magic happen.')
+                print('message before action->' + message_to_be_sent)
                 message_to_be_sent = action(reddit_link, update_data['text'], env)
+                print('message after action->' + message_to_be_sent)
                 link_received = 0
                 ready_to_tweet = 0
                 reddit_link = ''
@@ -52,6 +56,7 @@ def main():
                 link_received = 1
                 reddit_link = update_data['text']
 
+            # grabs message text to be sent on tweet
             elif ('DEV' in update_data['text'] or 'dev' in update_data['text']) or \
                     ('PROD' in update_data['text'] or 'prod' in update_data['text']) and link_received == 1:
                 message_to_be_sent = text_messages(3, update_data['text'])
@@ -66,13 +71,17 @@ def main():
 
 
 def action(full_link, tweet_msg, env):
+    tweet_return = ''
     saved_file_type = reddit_handler.download_reddit_submission(full_link)
 
-    print('saved_file_type = ' + saved_file_type)
+    print('Type of file saved from Reddit post => ' + saved_file_type)
+
+    # Depending on file format, different functions are used
     if saved_file_type == 'gif' or saved_file_type == 'jpg':
-        return twitter_handler.tweeet_image(tweet_msg, saved_file_type, env)
+        tweet_return = twitter_handler.tweeet_image(tweet_msg, saved_file_type, env)
     elif saved_file_type == 'mp4':
-        return twitter_handler.tweet_video(tweet_msg, env)
+        tweet_return = twitter_handler.tweet_video(tweet_msg, env)
+    return tweet_return
 
 
 # Python main or modular check

@@ -30,20 +30,22 @@ def api_setup(env_variable):
     return api_env
 
 
+def check_api_status(r):
+    # EXIT PROGRAM WITH ERROR MESSAGE IF API RETURN ERROR
+    if r.status_code < 200 or r.status_code > 299:
+        print('ERROR DURING API CONNECTION. Status code: ' + r.status_code)
+        print(r.text)
+        return False
+    return True
+
+
 def tweet_video(tweet_text, env):
     """This function tweets video files (mp4 format)"""
 
     video_filename = './tmp/tmp.mp4'
 
     clip_to_upload = VideoFileClip(video_filename)
-    print(clip_to_upload.duration)
-
-    def check_status(r):
-        # EXIT PROGRAM WITH ERROR MESSAGE
-        if r.status_code < 200 or r.status_code > 299:
-            print(r.status_code)
-            print(r.text)
-            sys.exit(0)
+    print('Clip length => ' + str(clip_to_upload.duration) + ' seconds')
 
     # Set API keys depending on environment to be used for tweet
     api = api_setup(env.upper())
@@ -54,12 +56,14 @@ def tweet_video(tweet_text, env):
     total_bytes = os.path.getsize(video_filename)
     file = open(video_filename, 'rb')
 
-    # Connection timeout increased to reduce errors happening because of slow connection do API
+    # Connection timeout increased to reduce errors that were happening because of slow connection to API (bad internet)
     api.CONNECTION_TIMEOUT = 20
 
+    # Open request to start video upload
     upload_return = api.request('media/upload',
                                 {'command': 'INIT', 'media_type': 'video/mp4', 'total_bytes': total_bytes})
-    check_status(upload_return)
+    if not check_api_status(upload_return):
+        return 'Error occurred during opening API upload request.'
 
     media_id = upload_return.json()['media_id']
     segment_id = 0
@@ -69,18 +73,23 @@ def tweet_video(tweet_text, env):
         upload_return = api.request('media/upload',
                                     {'command': 'APPEND', 'media_id': media_id, 'segment_index': segment_id},
                                     {'media': chunk})
-        check_status(upload_return)
+        if not check_api_status(upload_return):
+            return 'Error occurred during chunks uploading.'
         segment_id = segment_id + 1
         bytes_sent = file.tell()
-        print('[' + str(total_bytes) + ']', str(bytes_sent))
+        print('Total bytes to upload: [' + str(total_bytes) + '] \n Total bytes sent:', str(bytes_sent))
 
     upload_return = api.request('media/upload',
                                 {'command': 'FINALIZE', 'media_id': media_id})
-    check_status(upload_return)
+    if not check_api_status(upload_return):
+        return 'Error occurred when finalizing media upload.'
 
     upload_return = api.request('statuses/update',
                                 {'status': tweet_text, 'media_ids': media_id})
-    check_status(upload_return)
+    if not check_api_status(upload_return):
+        return 'Error occurred sending tweet message alongside media uploaded.'
+    else:
+        return ' Media upload finished.\nTweet successfully sent.'
 
 
 def tweeet_image(tweet_text, file_type, env):
@@ -97,12 +106,15 @@ def tweeet_image(tweet_text, file_type, env):
     file = open(image_path, 'rb')
     data = file.read()
     api_response = api.request('media/upload', None, {'media': data})
-    print('UPLOAD MEDIA SUCCESS' if api_response.status_code == 200 else 'UPLOAD MEDIA FAILURE: ' + api_response.text)
 
     # Post tweet with a reference to uploaded image alongside the chosen text only if media was successfully uploaded
     if api_response.status_code == 200:
+        print('UPDATE STATUS SUCCESS')
         media_id = api_response.json()['media_id']
         api_response = api.request('statuses/update', {'status': tweet_text, 'media_ids': media_id})
+
+        return 'Media uploaded successfully, tweet sent to API. API return ' + api_response
     else:
+        print('UPDATE STATUS FAILED. API response error ' + api_response)
         return 'Error during media upload: ' + api_response.text
-    print('UPDATE STATUS SUCCESS' if api_response.status_code == 200 else 'UPDATE STATUS FAILURE: ' + api_response.text)
+
