@@ -44,9 +44,7 @@ def main():
 
             elif reddit_link and ready_to_tweet:
                 print('Reddit link received and account to tweet selected. Making the magic happen.')
-                print('message before action->' + message_to_be_sent)
                 message_to_be_sent = action(reddit_link, update_data['text'], env)
-                print('message after action->' + message_to_be_sent)
                 link_received = 0
                 ready_to_tweet = 0
                 reddit_link = ''
