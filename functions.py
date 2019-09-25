@@ -1,5 +1,7 @@
 import requests
 from moviepy.editor import *
+from urllib import request, error
+from time import sleep
 
 directory = './tmp/'
 user_agent1 = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:67.0) Gecko/20100101 Firefox/67.0'
@@ -125,4 +127,25 @@ def check_size():
 
     return True
 
+
+def internet_on_check():
+    """ Function used to check if machine running the script has internet connection online """
+    try:
+        # Tries urlopen on Google DNS IP because of reliable uptime and static address.
+        request.urlopen('https://8.8.8.8/', timeout=10)
+        return True
+    except error.HTTPError as e:
+        print(e.__dict__)
+    except error.URLError as e:
+        print(e.__dict__)
+        return False
+
+
+def check_internet_loop():
+    # TODO this needs to be added alongside the entire project for each API request
+    #  more tests are needed to check for more exceptions because of internet offline during
+    while not internet_on_check():
+        print('Internet connection is down. Retrying until Python detects that internet connection is online.')
+        sleep(30)
+    return True
 
