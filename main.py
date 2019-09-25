@@ -1,5 +1,6 @@
 import reddit_handler
 import twitter_handler
+import functions
 from time import sleep
 from telegram_bot import Telegram
 
@@ -28,7 +29,9 @@ def main():
     message_to_be_sent = ''
 
     while True:
-        # TODO make a check if connection is down. Try-exception here.
+        # Always check if connection is active first to avoid errors and exceptions
+        functions.check_internet_loop()
+
         last_updates = bot.get_updates()
 
         for update in last_updates:
@@ -87,6 +90,9 @@ def action(full_link, tweet_msg, env):
 
 # Python main or modular check
 if __name__ == '__main__':
+    # Check connection before initializing class
+    functions.check_internet_loop()
+
     bot = Telegram()
     bot.get_me()
     main()
