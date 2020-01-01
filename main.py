@@ -37,10 +37,6 @@ def main():
         for update in last_updates:
             update_data = bot.get_update_data(update['message'])
 
-            # Debugs
-            # print(update_data['id'])
-            # print(update_data['user'])
-
             # TODO make a new check because if there is in the URL the 'CANCEL' word this would trigger this IF
             if 'CANCEL' in update_data['text']:
                 message_to_be_sent = text_messages(1)
@@ -60,8 +56,7 @@ def main():
                 reddit_link = update_data['text']
 
             # grabs message text to be sent on tweet alongside media content
-            elif ('DEV' in update_data['text'] or 'dev' in update_data['text']) or \
-                    ('PROD' in update_data['text'] or 'prod' in update_data['text']) and link_received == 1:
+            elif ('DEV' in update_data['text'].upper() or 'PROD' in update_data['text'].upper()) and link_received == 1:
                 message_to_be_sent = text_messages(3, update_data['text'])
                 ready_to_tweet = 1
                 env = update_data['text']
