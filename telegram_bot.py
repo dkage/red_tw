@@ -1,5 +1,6 @@
 from api_keys import BOT_KEY
 import requests
+import json
 
 
 class Telegram:
@@ -61,8 +62,26 @@ class Telegram:
         else:
             return update_data
 
-    def send_message(self, text_to_send, receiver_id, receiver_user):
-        http_response = requests.get(self.url + "sendMessage?text={}&chat_id={}".format(text_to_send, receiver_id))
+    @staticmethod
+    def make_json(chat_id, text, keyboard=None):
+        if keyboard:
+            json_data = {
+                'chat_id': chat_id,
+                'text': text,
+                'reply_markup': json.dumps(keyboard)
+            }
+        else:
+            json_data = {
+                'chat_id': chat_id,
+                'text': text,
+            }
+
+        return json_data
+
+    def send_message(self, text_to_send, receiver_id, receiver_user, inline_keyboard=None):
+
+        json_data = self.make_json(receiver_id, text_to_send)
+        http_response = requests.get(self.url + "sendMessage", data=json_data)
         if http_response.status_code == 200:
             print('\nMessage successfully sent to user {}, chat_id = {},\n'
                   'Message > {}\n'.format(receiver_user, receiver_id, text_to_send))
