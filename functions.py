@@ -45,7 +45,7 @@ def download_video(video_url):
     output_file_path = directory + 'tmp.mp4'
 
     # Downloads MP4 in 480p resolution (gives the best file size to be uploaded later)
-    url_mp4 = video_url + '/DASH_480'
+    url_mp4 = video_url + '/DASH_1080'
     url_audio = video_url + '/audio'
 
     # User agent to be used during HTTP request
@@ -62,7 +62,7 @@ def download_video(video_url):
 
     video_file_size = os.stat(video_file_path).st_size
     if video_file_size < 250:
-        url_mp4 = video_url + '/DASH_360'
+        url_mp4 = video_url + '/DASH_1080'
         response = requests.get(url_mp4, headers={'User-Agent': user_agent})
         with open(video_file_path, 'wb') as f:
             print("Downloading video")

@@ -10,8 +10,8 @@ def text_messages(option, env=''):
     if option == 1:
         return 'Action Reddit to Twitter process cancelled by user.'
     elif option == 2:
-        return 'Reddit link received. Please choose account to make upload, type "DEV" for test account or "PROD" for ' \
-               'main account.'
+        return 'Reddit link received. Please choose account to make upload, type "DEV" for test account or "PROD" ' \
+               'for main account.'
     elif option == 3:
         return 'Type tweet text message. The next message sent will be tweeted alongside the media from the given ' \
                'link.\n' \
@@ -26,7 +26,6 @@ def main():
     ready_to_tweet = 0
     reddit_link = ''
     env = ''
-    message_to_be_sent = ''
 
     while True:
         # Always check if connection is active first to avoid errors and exceptions
@@ -37,8 +36,7 @@ def main():
         for update in last_updates:
             update_data = bot.get_update_data(update['message'])
 
-            # TODO make a new check because if there is in the URL the 'CANCEL' word this would trigger this IF
-            if 'CANCEL' in update_data['text']:
+            if 'CANCEL' in update_data['text'] and 'http' not in update_data['text']:
                 message_to_be_sent = text_messages(1)
                 link_received = 0
                 reddit_link = ''
@@ -83,9 +81,7 @@ def action(full_link, tweet_msg, env):
     return tweet_return
 
 
-# Python main or modular check
 if __name__ == '__main__':
-    # Check connection before initializing class
     functions.check_internet_loop()
 
     bot = Telegram()
