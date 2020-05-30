@@ -32,6 +32,7 @@ def main():
         functions.check_internet_loop()
 
         last_updates = bot.get_updates()
+        inline_keyboard = None
 
         for update in last_updates:
             update_data = bot.get_update_data(update['message'])
@@ -49,6 +50,7 @@ def main():
                 reddit_link = ''
 
             elif 'reddit.com' in update_data['text'] and link_received == 0:
+                # Asks for env PROD or DEV
                 message_to_be_sent = text_messages(2)
                 link_received = 1
                 reddit_link = update_data['text']
