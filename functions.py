@@ -28,6 +28,8 @@ def download(url, extension):
         print('File downloaded successfully')
     except Exception as error:
         print('Error accessing URL:\n' + str(error))
+        # TODO add verification for this function calls to check for return
+        return False
 
     return True
 
@@ -67,7 +69,10 @@ def download_video(video_url):
     # URL needs the suffix with resolution number. This does not seem to be consistent, sometimes the first download
     # works, and sometimes it requires the /DASH_[resolution] added at the end.
     if video_file_size < 250:
+        print('First version failed. Trying grabbing DASH_ version.')
+        print('URL: ' + url_mp4)
         url_mp4 = video_url + '/DASH_1080'
+        print(url_mp4)
         response = requests.get(url_mp4, headers={'User-Agent': user_agent})
         download_reddit_hosted(response, video_file_path, 'video')
 
@@ -76,9 +81,9 @@ def download_video(video_url):
     download_reddit_hosted(response, audio_file_path, 'audio')
     audio_file_size = os.stat(audio_file_path).st_size
 
+    # Loads video file as object using MOVIEPY into mp4_video variable and saves output as 'tmp.mp4'
     mp4_video = (VideoFileClip(video_file_path))
     if audio_file_size > 243:
-        # Loads video file as object using MOVIEPY into mp4_video variable and saves output as 'tmp.mp4'
         mp4_video.write_videofile(output_file_path, audio=audio_file_path)
     else:
         mp4_video.write_videofile(output_file_path)
@@ -95,13 +100,18 @@ def download_video(video_url):
     return True
 
 
+def best_resolution_finder(video_url, current_tried=None):
+    pass
+
+
 def download_reddit_hosted(response, path, file_type):
 
     with open(path, 'wb') as f:
-        print("Downloading " + file_type)
+        print("     Downloading " + file_type + ' as ' + path)
         for chunk in response.iter_content(chunk_size=255):
             if chunk:
                 f.write(chunk)
+        print('     Download Finished.')
 
 
 def convert_mp4_to_gif(video_file='./tmp/tmp.mp4'):
