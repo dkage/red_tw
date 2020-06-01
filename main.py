@@ -1,3 +1,4 @@
+import set_env
 import reddit_handler
 import twitter_handler
 import functions
