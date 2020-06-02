@@ -60,21 +60,26 @@ def download_video(video_url):
     user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' \
                  'Chrome/70.0.3538.77 Safari/537.36'
 
+    resolutions_to_try = ['1080', '720', '480', '360', '240']
+    for resolution in resolutions_to_try:
+        if resolution_tester(video_url, user_agent, video_file_path, resolution):
+            break
+
     # Download video file
-    response = requests.get(url_mp4, headers={'User-Agent': user_agent})
-    download_reddit_hosted(response, video_file_path, 'video')
-    video_file_size = os.stat(video_file_path).st_size
+    # response = requests.get(url_mp4, headers={'User-Agent': user_agent})
+    # download_reddit_hosted(response, video_file_path, 'video')
+    # video_file_size = os.stat(video_file_path).st_size
 
     # If first try downloading video yields a file with less than 250 bytes, then it failed and the current video
     # URL needs the suffix with resolution number. This does not seem to be consistent, sometimes the first download
     # works, and sometimes it requires the /DASH_[resolution] added at the end.
-    if video_file_size < 250:
-        print('First version failed. Trying grabbing DASH_ version.')
-        print('URL: ' + url_mp4)
-        url_mp4 = video_url + '/DASH_1080'
-        print(url_mp4)
-        response = requests.get(url_mp4, headers={'User-Agent': user_agent})
-        download_reddit_hosted(response, video_file_path, 'video')
+    # if video_file_size < 250:
+    #     print('First version failed. Trying grabbing DASH_ version.')
+    #     print('URL: ' + url_mp4)
+    #     url_mp4 = video_url + '/DASH_1080'
+    #     print(url_mp4)
+    #     response = requests.get(url_mp4, headers={'User-Agent': user_agent})
+    #     download_reddit_hosted(response, video_file_path, 'video')
 
     # Download audio file
     response = requests.get(url_audio, headers={'User-Agent': user_agent})
@@ -89,7 +94,7 @@ def download_video(video_url):
         mp4_video.write_videofile(output_file_path)
 
     if mp4_video.duration > 30.00:
-        # Duration must be between 0.5 seconds and 140 seconds
+        # From docs: Duration must be between 0.5 seconds and 140 seconds
         # TODO needs to send message to user and return false to functions
         # TODO maybe create a new chat iteration if video length is too big, to ask for times to download video
         #  probably new function to be called
@@ -100,8 +105,22 @@ def download_video(video_url):
     return True
 
 
-def best_resolution_finder(video_url, current_tried=None):
-    pass
+def resolution_tester(video_url, user_agent, path, resolution):
+
+    full_url = video_url + '/DASH_' + resolution
+
+    print('-- Trying now to download video in %s resolution.' % resolution)
+    print('-- -- URL: %s' % full_url)
+    response = requests.get(full_url, headers={'User-Agent': user_agent})
+    download_reddit_hosted(response, path, 'video')
+
+    video_file_size = os.stat(path).st_size
+
+    if video_file_size < 250:
+        print('**** Resolution not found. Trying grabbing next resolution.')
+        return False
+
+    return True
 
 
 def download_reddit_hosted(response, path, file_type):
@@ -112,6 +131,7 @@ def download_reddit_hosted(response, path, file_type):
             if chunk:
                 f.write(chunk)
         print('     Download Finished.')
+    return True
 
 
 def convert_mp4_to_gif(video_file='./tmp/tmp.mp4'):

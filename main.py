@@ -6,6 +6,7 @@ from time import sleep
 from telegram_bot import Telegram
 
 
+
 def text_messages(option, env=''):
     """ This function returns the corresponding answer messages to be sent for user through Telegram bot. """
     if option == 1:
