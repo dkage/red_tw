@@ -1,4 +1,5 @@
 import os
+from time import sleep
 import sys
 from TwitterAPI import TwitterAPI
 # Prod Keys
@@ -33,7 +34,7 @@ def api_setup(env_variable):
 def check_api_status(r):
     # EXIT PROGRAM WITH ERROR MESSAGE IF API RETURN ERROR
     if r.status_code < 200 or r.status_code > 299:
-        print('ERROR DURING API CONNECTION. Status code: ' + r.status_code)
+        print('ERROR DURING API CONNECTION. Status code: ' + str(r.status_code))
         print(r.text)
         return False
     return True
@@ -60,8 +61,14 @@ def tweet_video(tweet_text, env):
     api.CONNECTION_TIMEOUT = 20
 
     # Open request to start video upload
+    # TODO read https://github.com/ttezel/twit/issues/306
+    # TODO read https://github.com/ttezel/twit/issues/306
+    # TODO read https://github.com/ttezel/twit/issues/306
     upload_return = api.request('media/upload',
-                                {'command': 'INIT', 'media_type': 'video/mp4', 'total_bytes': total_bytes})
+                                {'command': 'INIT',
+                                 'media_type': 'video/mp4',
+                                 'media_category': 'tweet_video',
+                                 'total_bytes': total_bytes})
     if not check_api_status(upload_return):
         return 'Error occurred during opening API upload request.'
 
@@ -80,12 +87,27 @@ def tweet_video(tweet_text, env):
         print('Total bytes to upload: [' + str(total_bytes) + '] \n Total bytes sent:', str(bytes_sent))
 
     upload_return = api.request('media/upload',
-                                {'command': 'FINALIZE', 'media_id': media_id})
+                                {'command': 'FINALIZE',
+                                 'media_id': media_id})
+
+    # Check for HTTP response errors code
     if not check_api_status(upload_return):
         return 'Error occurred when finalizing media upload.'
 
+    print(upload_return.json())
+    if upload_return.json()['processing_info']:
+        while upload_return.json()['processing_info']['state'] is ('in_progress' or 'pending'):
+            sleep(int(upload_return.json()['processing_info']['check_after_secs']))
+            upload_return = api.request('media/upload',
+                                        {'command': 'FINALIZE',
+                                         'media_id': media_id})
+
+    if upload_return.json()['processing_info']['state'] is 'failed':
+        return 'Error occurred when processing video file on server side, error tw01'
+
+    # Tweet!
     upload_return = api.request('statuses/update',
-                                {'status': tweet_text, 'media_ids': media_id})
+                                {'status': tweet_text, 'media_id': media_id})
     if not check_api_status(upload_return):
         return 'Error occurred sending tweet message alongside media uploaded.'
     else:

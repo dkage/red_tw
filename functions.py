@@ -116,6 +116,7 @@ def resolution_tester(video_url, user_agent, path, resolution):
 
     video_file_size = os.stat(path).st_size
 
+    # TODO add test to verify size and length, if does not comply with docs, also return False
     if video_file_size < 250:
         print('**** Resolution not found. Trying grabbing next resolution.')
         return False
